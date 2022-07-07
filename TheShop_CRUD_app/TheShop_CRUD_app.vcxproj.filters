@@ -20,6 +20,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="login.txt" />
+    <Text Include="records.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

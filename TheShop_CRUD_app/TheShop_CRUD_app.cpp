@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string.h>
 #include <fstream>
+#include <Windows.h>
 
-std::fstream lgin("login.txt");
+//std::fstream lgin("login.txt");
 int id;
 
 class Product {
@@ -106,7 +107,7 @@ public:
 		//this->m_threads = threads;
 		std::cout << "Treads: ";
 		std::cin >> m_threads;
-		return* this;
+		return*this;
 	}
 	CPU& SetSocket(/*std::string socket*/) {
 		//this->m_socket = socket;
@@ -131,12 +132,12 @@ public:
 	}
 };
 
-enum  tech{OpenGL = 1, DirectX = 2};
+enum  tech { OpenGL = 1, DirectX = 2 };
 
 class GPU :public Product {
 protected:
 	char m_max_resolution[25];
-	 tech m_tech;
+	tech m_tech;
 public:
 	GPU& SetMaxResolution(/*std::string max_resolution*/) {
 		//this->m_max_resolution = max_resolution;
@@ -177,54 +178,84 @@ public:
 class User {
 public:
 	int m_id;
-	char m_username[25] = { 0 };
-	char m_password[10] = { 0 };
+	std::string m_username;
+	std::string m_password;
 	int m_roleType = 0;
 
 
 
 };
 
+
 void signup(User& x) {
-	lgin << id++ << ' ';
+	std::ofstream record("records.txt");
+	record << id++ << ' ';
 	std::cout << "username: ";
-	std::cin.get(x.m_username, 25); std::cin.ignore();
-	lgin << x.m_username << " ";
+	std::cin >> x.m_username; std::cin.ignore();
+	record << x.m_username << " ";
 	std::cout << "password: ";
-	std::cin.get(x.m_password, 10); std::cin.ignore();
-	lgin << x.m_password;
-	lgin << std::endl;
+	std::cin >> x.m_password; std::cin.ignore();
+	record << x.m_password;
+	record << std::endl;
 	std::cout << "Success!\n";
 }
 
-void login(void) {
-	char username[25], password[10];
-	std::cout << "//Login//\n";
-	std::cout << "username: "; std::cin.get(password, 10); std::cin.ignore();
-	char usrnm[1000][25], pswrd[1000][10];
-	int id[1000];
-	int i=0;
-	while (lgin >> id[i] >> usrnm[i] >> pswrd[i])
+int attempt = 1;
+void login(User& x) {
+
+	std::string username, password, usern, pass;
+	int lgid;
+start_login:
+	system("cls");//curata ecranul;
+	std::cout << "username: ";
+	std::cin >> username;
+	std::cout << "password: ";
+	std::cin >> password;
+	std::ifstream lgin("records.txt");
+	while (lgin >> lgid >> usern >> pass)
 	{
-		if (!strcmp(username, usrnm[i])) {
-			std::cout << "password: "; std::cin.get(password, 10); std::cin.ignore();
-			while(strcmp(password,pswrd[i])
-
+		if (username == usern && password == pass) {
+			attempt = 1;
+			std::cout << "Login Successful";
 		}
-		i++;
-	}
+		else {
+			attempt++;
+			if (attempt <= 5) {
+				std::cout << "Wrong username or password. Try again!!";
+				Sleep(500);
+				goto start_login;
+			}
+			else std::cout << "5 failed login. Your are NUB";
+			std::exit(11);
+		}
 
-	std::cin>>
+	}
+	lgin.close();
+	x.m_id = lgid;
+	x.m_password = password;
+	x.m_username = username;
+	x.m_roleType = 0;
 }
 
 
-
-
+User x[1000], y;
 
 int main() {
-	
-	User x,y;
-	signup(x);
-	signup(y);
+	int option;
+	std::cout << "AMD Shop Menu:\n";
+start:
+	std::cout << "\n\nSelect Option:\n\n";
+	std::cout << "1. SignUp\n";
+	std::cout << "2. SignIn\n";
+	std::cout << "3. Your menu\n";
+	std::cout << "4. Exit\n\n";
+	std::cout << "Your choice: ";
+	std::cin >> option;
+	switch (option) {
+	case 1: {system("cls"); signup(x[id++]); goto start; }
+	case 2: {system("cls"); login(y); goto start; }
+	case 3: {std::cout << "In lucru!!"; break; }
+	case 4: {system("cls"); std::exit(-1); }
+	}
 	return 0;
 }

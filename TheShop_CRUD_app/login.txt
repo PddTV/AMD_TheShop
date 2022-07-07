@@ -1,2 +1,0 @@
-0 paul parola1
-1 paul2 parola2
