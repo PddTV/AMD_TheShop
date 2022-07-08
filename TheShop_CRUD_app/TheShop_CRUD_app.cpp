@@ -3,9 +3,6 @@
 #include <fstream>
 #include <Windows.h>
 
-//std::fstream lgin("login.txt");
-int id;
-
 class Product {
 protected:
 	float m_weight;
@@ -15,7 +12,7 @@ protected:
 	int m_memory;
 	float m_clock_freq;
 	float m_price;
-	char m_release_date[25];
+	std::string m_release_date;
 
 public:
 	Product& SetWeight(/*float weight*/) {
@@ -63,8 +60,7 @@ public:
 	Product& SetReleaseDate(/*std::string release_date*/) {
 		//this->m_release_date = release_date;
 		std::cout << "Release date: ";
-		std::cin.ignore();
-		std::cin.get(m_release_date, 25);
+		std::cin>>m_release_date;
 		return *this;
 	}
 	float GetWeight(void) {
@@ -94,7 +90,7 @@ class CPU :public Product {
 protected:
 	int m_core;
 	int m_threads;
-	char m_socket[25];
+	std::string m_socket;
 
 public:
 	CPU& SetCore(/*int core*/) {
@@ -113,7 +109,7 @@ public:
 		//this->m_socket = socket;
 		std::cout << "Socket: ";
 		std::cin.ignore();
-		std::cin.get(m_socket, 25);
+		std::cin>>m_socket;
 		return *this;
 	}
 	int GetCore(void) {
@@ -126,40 +122,38 @@ public:
 		return m_socket;
 	}
 
-	CPU& IntroduceAllData(void) {
+	CPU& AddProduct(void) {
 		SetCore().SetThreads().SetSocket().SetWeight().SetHeight().SetTDP().SetNM().SetFreq().SetPrice().SetReleaseDate();
 		return *this;
 	}
 };
 
-enum  tech { OpenGL = 1, DirectX = 2 };
-
 class GPU :public Product {
 protected:
-	char m_max_resolution[25];
-	tech m_tech;
+	std::string m_max_resolution;
+	std::string m_tech;
 public:
 	GPU& SetMaxResolution(/*std::string max_resolution*/) {
 		//this->m_max_resolution = max_resolution;
 		std::cout << "Max Resolution: ";
-		std::cin.ignore();
-		std::cin.get(m_max_resolution, 25);
+		std::cin>>m_max_resolution;
 		//m_max_resolution[strlen(m_max_resolution) + 1] = '\0';
 		return *this;
 	}
-	//GPU& SetTechnologies(tech r_tech) {
-	//	m_tech = r_tech;
-	//	//std::cin >> m_tech;
-	//	return *this;
-	//}
-	//tech GetTechnologies(void) {
-	//	return m_tech;
-	//}
+	GPU& SetTechnologies(std::string r_tech) {
+		//m_tech = r_tech;
+		std::cout << "Support Technologies (OpenGL, DirectX): ";
+		std::cin >> m_tech;
+		return *this;
+	}
+	std::string GetTechnologies(void) {
+		return m_tech;
+	}
 	std::string GetMaxResolution(void) {
 		return m_max_resolution;
 	}
 
-	GPU& IntroduceAllData(void) {
+	GPU& AddProduct(void) {
 		SetMaxResolution().SetWeight().SetHeight().SetTDP().SetNM().SetFreq().SetPrice().SetReleaseDate();
 		return *this;
 	}
@@ -167,7 +161,7 @@ public:
 
 class APU : public CPU, public GPU {
 public:
-	GPU& IntroduceAllData(void) {
+	GPU& AddProduct(void) {
 		SetCore().SetThreads().SetSocket();
 		SetMaxResolution().SetWeight().SetHeight().SetTDP().SetNM().SetFreq().SetPrice().SetReleaseDate();
 		return *this;
@@ -180,67 +174,76 @@ public:
 	int m_id;
 	std::string m_username;
 	std::string m_password;
-	int m_roleType = 0;
+	int m_roleType;
 
-
-
+	User& AddMod(User& x) {
+		x.m_roleType = 1;
+		return *this;
+	}
 };
 
-
 void signup(User& x) {
-	std::ofstream record("records.txt");
-	record << id++ << ' ';
+	static int id = 1;
 	std::cout << "username: ";
-	std::cin >> x.m_username; std::cin.ignore();
-	record << x.m_username << " ";
+	std::cin >> x.m_username;
 	std::cout << "password: ";
-	std::cin >> x.m_password; std::cin.ignore();
-	record << x.m_password;
-	record << std::endl;
+	std::cin >> x.m_password;
+	x.m_roleType = 0;
+
+	std::fstream record;
+	record.open("records.txt", std::fstream::app | std::fstream::out);
+	record << id << ' ';
+	record << x.m_username << ' ';
+	record << x.m_password << ' ';
+	record << x.m_roleType;
+	record << '\n';
+	record.close();
 	std::cout << "Success!\n";
+	id++;
+	
+	
 }
 
-int attempt = 1;
 void login(User& x) {
-
+	int attempt = 1;
 	std::string username, password, usern, pass;
-	int lgid;
+	int lgid, roletype;
 start_login:
 	system("cls");//curata ecranul;
 	std::cout << "username: ";
 	std::cin >> username;
 	std::cout << "password: ";
 	std::cin >> password;
-	std::ifstream lgin("records.txt");
-	while (lgin >> lgid >> usern >> pass)
+	std::fstream loginfin;
+	loginfin.open("records.txt", /*std::fstream::app |*/ std::fstream::in);
+	while (loginfin >> lgid >> usern >> pass >> roletype)
 	{
+		
 		if (username == usern && password == pass) {
-			attempt = 1;
 			std::cout << "Login Successful";
+			loginfin.close();
+			x.m_id = lgid;
+			x.m_password = password;
+			x.m_username = username;
+			x.m_roleType = roletype;
+			break;
+		}
+		attempt++;
+		if (attempt <= 5) {
+			std::cout << "Wrong username or password. Try again!!";
+			Sleep(500);
+			goto start_login;
 		}
 		else {
-			attempt++;
-			if (attempt <= 5) {
-				std::cout << "Wrong username or password. Try again!!";
-				Sleep(500);
-				goto start_login;
-			}
-			else std::cout << "5 failed login. Your are NUB";
+			std::cout << "5 failed login. Your are NUB";
 			std::exit(11);
 		}
-
 	}
-	lgin.close();
-	x.m_id = lgid;
-	x.m_password = password;
-	x.m_username = username;
-	x.m_roleType = 0;
-}
+	loginfin.close();
+}//nu merge pe alt utilizator, decat la primul
 
-
-User x[1000], y;
-
-int main() {
+void MainMenu() {
+	User x;
 	int option;
 	std::cout << "AMD Shop Menu:\n";
 start:
@@ -252,10 +255,25 @@ start:
 	std::cout << "Your choice: ";
 	std::cin >> option;
 	switch (option) {
-	case 1: {system("cls"); signup(x[id++]); goto start; }
-	case 2: {system("cls"); login(y); goto start; }
-	case 3: {std::cout << "In lucru!!"; break; }
+	case 1: {system("cls"); signup(x); goto start; }
+	case 2: {system("cls"); login(x); goto start; }
+	case 3: {std::cout << "ERROR 404 Not Found!! - Working in progress!!"; break; }
 	case 4: {system("cls"); std::exit(-1); }
 	}
+}
+
+
+int main() {
+	User admin;
+	admin.m_id = 0;
+	admin.m_password = "admin";
+	admin.m_roleType = 1;
+	admin.m_username = "admin";
+
+	//APU y;
+	//y.IntroduceAllData();
+	//std::cout<<y.GPU::GetWeight();//????y.GetWeigt?????
+
+	MainMenu();
 	return 0;
 }
