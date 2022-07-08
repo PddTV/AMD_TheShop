@@ -86,7 +86,7 @@ public:
 	}
 };
 
-class CPU :public Product {
+class CPU :public virtual Product {
 protected:
 	int m_core;
 	int m_threads;
@@ -128,7 +128,7 @@ public:
 	}
 };
 
-class GPU :public Product {
+class GPU :public virtual Product {
 protected:
 	std::string m_max_resolution;
 	std::string m_tech;
@@ -182,44 +182,51 @@ public:
 	}
 };
 
+
 void signup(User& x) {
 	static int id = 1;
+	std::fstream nextId;
+	nextId.open("nextid_register.txt", std::fstream::in);
+	if (!(nextId >> id));
+	nextId.close();
 	std::cout << "username: ";
 	std::cin >> x.m_username;
 	std::cout << "password: ";
 	std::cin >> x.m_password;
 	x.m_roleType = 0;
-
 	std::fstream record;
-	record.open("records.txt", std::fstream::app | std::fstream::out);
+	record.open("records.txt", std::fstream::app |  std::fstream::out);
 	record << id << ' ';
 	record << x.m_username << ' ';
 	record << x.m_password << ' ';
 	record << x.m_roleType;
 	record << '\n';
 	record.close();
+	nextId.open("nextid_register.txt", std::fstream::out);
+	nextId << ++id;
 	std::cout << "Success!\n";
-	id++;
-	
-	
+	nextId.close();
 }
 
 void login(User& x) {
-	int attempt = 1;
+start_login:
+	int attempt = 0;
 	std::string username, password, usern, pass;
 	int lgid, roletype;
-start_login:
+
 	system("cls");//curata ecranul;
 	std::cout << "username: ";
 	std::cin >> username;
 	std::cout << "password: ";
 	std::cin >> password;
 	std::fstream loginfin;
-	loginfin.open("records.txt", /*std::fstream::app |*/ std::fstream::in);
+	loginfin.open("records.txt", std::fstream::in);
+
+
 	while (loginfin >> lgid >> usern >> pass >> roletype)
 	{
-		
 		if (username == usern && password == pass) {
+			attempt = 1;
 			std::cout << "Login Successful";
 			loginfin.close();
 			x.m_id = lgid;
@@ -228,19 +235,14 @@ start_login:
 			x.m_roleType = roletype;
 			break;
 		}
-		attempt++;
-		if (attempt <= 5) {
-			std::cout << "Wrong username or password. Try again!!";
-			Sleep(500);
-			goto start_login;
-		}
-		else {
-			std::cout << "5 failed login. Your are NUB";
-			std::exit(11);
-		}
+		
 	}
-	loginfin.close();
-}//nu merge pe alt utilizator, decat la primul
+	if (attempt == 0) {
+		std::cout << "Wrong username or password. Try again!!";
+		Sleep(700);
+		goto start_login;
+	}
+}
 
 void MainMenu() {
 	User x;
@@ -270,10 +272,9 @@ int main() {
 	admin.m_roleType = 1;
 	admin.m_username = "admin";
 
-	//APU y;
-	//y.IntroduceAllData();
-	//std::cout<<y.GPU::GetWeight();//????y.GetWeigt?????
-
-	MainMenu();
+	APU y;
+	y.AddProduct();
+	std::cout<<y.GetWeight();
+	//MainMenu();
 	return 0;
 }

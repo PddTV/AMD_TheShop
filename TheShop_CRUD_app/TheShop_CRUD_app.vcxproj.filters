@@ -23,5 +23,8 @@
     <Text Include="records.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="nextid_register.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
