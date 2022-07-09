@@ -85,7 +85,6 @@ public:
 		return m_release_date;
 	}
 };
-
 class CPU :public virtual Product {
 protected:
 	int m_core;
@@ -127,7 +126,6 @@ public:
 		return *this;
 	}
 };
-
 class GPU :public virtual Product {
 protected:
 	std::string m_max_resolution;
@@ -158,7 +156,6 @@ public:
 		return *this;
 	}
 };
-
 class APU : public CPU, public GPU {
 public:
 	GPU& AddProduct(void) {
@@ -167,14 +164,12 @@ public:
 		return *this;
 	}
 };
-
-
 class User {
 public:
 	int m_id;
 	std::string m_username;
 	std::string m_password;
-	int m_roleType;
+	bool m_roleType;
 
 	User& AddMod(User& x) {
 		x.m_roleType = 1;
@@ -182,8 +177,28 @@ public:
 	}
 };
 
+bool verify_singup(std::string x);
+void signup(User& x);
+bool login(User& x);
+void MainMenu(void);
+void SecondaryMenu(bool type);
+
+int main() {
+	User admin;
+	admin.m_id = 0;
+	admin.m_password = "admin";
+	admin.m_roleType = 1;
+	admin.m_username = "admin";
+
+	/*APU y;
+	y.AddProduct();
+	std::cout<<y.GetWeight();*/
+	MainMenu();
+	return 0;
+}
 
 void signup(User& x) {
+start:
 	static int id = 1;
 	std::fstream nextId;
 	nextId.open("nextid_register.txt", std::fstream::in);
@@ -193,9 +208,15 @@ void signup(User& x) {
 	std::cin >> x.m_username;
 	std::cout << "password: ";
 	std::cin >> x.m_password;
+	if (!verify_singup(x.m_username)) {
+		std::cout << "Username was taken! Try again!!";
+		Sleep(700);
+		system("cls");
+		goto start;
+	}
 	x.m_roleType = 0;
 	std::fstream record;
-	record.open("records.txt", std::fstream::app |  std::fstream::out);
+	record.open("records.txt", std::fstream::app | std::fstream::out);
 	record << id << ' ';
 	record << x.m_username << ' ';
 	record << x.m_password << ' ';
@@ -207,8 +228,7 @@ void signup(User& x) {
 	std::cout << "Success!\n";
 	nextId.close();
 }
-
-void login(User& x) {
+bool login(User& x) {
 start_login:
 	int attempt = 0;
 	std::string username, password, usern, pass;
@@ -235,46 +255,80 @@ start_login:
 			x.m_roleType = roletype;
 			break;
 		}
-		
+
 	}
 	if (attempt == 0) {
 		std::cout << "Wrong username or password. Try again!!";
 		Sleep(700);
 		goto start_login;
 	}
+	return roletype;
 }
-
-void MainMenu() {
+bool verify_singup(std::string x) {
+	std::string usern, pass;
+	int lgid, roletype;
+	std::fstream verify;
+	verify.open("records.txt", std::fstream::in);
+	while (verify >> lgid >> usern >> pass >> roletype)
+		if (x == usern) {
+			verify.close();
+			return 0;
+		}
+	verify.close();
+	return 1;
+}
+void MainMenu(void) {
 	User x;
 	int option;
 	std::cout << "AMD Shop Menu:\n";
 start:
 	std::cout << "\n\nSelect Option:\n\n";
 	std::cout << "1. SignUp\n";
-	std::cout << "2. SignIn\n";
-	std::cout << "3. Your menu\n";
-	std::cout << "4. Exit\n\n";
+	std::cout << "2. SignIn and Enter to your menu\n";
+	std::cout << "3. Exit\n\n";
 	std::cout << "Your choice: ";
 	std::cin >> option;
 	switch (option) {
 	case 1: {system("cls"); signup(x); goto start; }
-	case 2: {system("cls"); login(x); goto start; }
-	case 3: {std::cout << "ERROR 404 Not Found!! - Working in progress!!"; break; }
-	case 4: {system("cls"); std::exit(-1); }
+	case 2: {system("cls"); SecondaryMenu(login(x)); goto start; }
+	case 3: {system("cls"); std::exit(-99); }
+	default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
 	}
 }
-
-
-int main() {
-	User admin;
-	admin.m_id = 0;
-	admin.m_password = "admin";
-	admin.m_roleType = 1;
-	admin.m_username = "admin";
-
-	APU y;
-	y.AddProduct();
-	std::cout<<y.GetWeight();
-	//MainMenu();
-	return 0;
+void SecondaryMenu(bool type) {
+start:
+	int option;
+	if (type)
+	{
+		std::cout << "\n1. Add a product in database\n";
+		std::cout << "2. List of products from database\n";
+		std::cout << "3. Delete a product from database\n";
+		std::cout << "4. Add admin\n";
+		std::cout << "5. Return to Main Menu\n\n";
+		std::cout << "Your choice: ";
+		std::cin >> option;
+		switch (option) {
+		case 1: { /*AddProduct in database (products.txt, delimitat de ;)*/ system("cls"); goto start; }
+		case 2: { system("cls"); /*Lista products.txt*/; goto start; }
+		case 3: {/*DeleteProduct per linie (un alt fisier cu datele fara cel selectat, temp.txt, apoi stergere cel vechi si redenumire temp.txt in products.txt*/ system("cls"); goto start; }
+		case 4: {/*change type, procedura asemanatoare ca la delete*/  system("cls"); goto start; }
+		case 5: {system("cls"); MainMenu(); break; }
+		default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
+		}
+	}
+	else {
+		std::cout << "\n1. Add a product to cart\n";
+		std::cout << "2. Show the cart\n";
+		std::cout << "3. Delete a product from cart\n";
+		std::cout << "4. Return to Main Menu\n";
+		std::cout << "Your choice: ";
+		std::cin >> option;
+		switch (option) {
+		case 1: { /*AddProduct in cart (cart_username.txt, delimitat de ;)*/ system("cls"); goto start; }
+		case 2: { system("cls"); goto start; }
+		case 3: { /*DeleteProduct per linie (un alt fisier cu datele fara cel selectat, temp.txt, apoi stergere cel vechi si redenumire temp.txt in cart_username.txt*/ system("cls"); goto start; }
+		case 4: {system("cls"); MainMenu(); break; }
+		default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
+		}
+	}
 }
