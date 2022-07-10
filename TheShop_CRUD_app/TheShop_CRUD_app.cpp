@@ -5,6 +5,7 @@
 
 class Product {
 protected:
+	char m_name[100];
 	float m_weight;
 	float m_height;
 	float m_TDP;
@@ -12,9 +13,15 @@ protected:
 	int m_memory;
 	float m_clock_freq;
 	float m_price;
-	std::string m_release_date;
+	char m_release_date[25];
 
 public:
+	Product& SetName() {
+		std::cin.ignore();
+		std::cout << "Name: ";
+		std::cin.getline(m_name, 100); 
+		return *this;
+	}
 	Product& SetWeight(/*float weight*/) {
 		//this->m_weight = weight;
 		std::cout << "Weight: ";
@@ -57,11 +64,14 @@ public:
 		std::cin >> m_price;
 		return *this;
 	}
-	Product& SetReleaseDate(/*std::string release_date*/) {
-		//this->m_release_date = release_date;
+	Product& SetReleaseDate() {
+		std::cin.ignore();
 		std::cout << "Release date: ";
-		std::cin>>m_release_date;
+		std::cin.getline(m_release_date,25);
 		return *this;
+	}
+	std::string GetName(void) {
+		return m_name;
 	}
 	float GetWeight(void) {
 		return m_weight;
@@ -72,7 +82,7 @@ public:
 	float GetTDP(void) {
 		return m_TDP;
 	}
-	float GetNM(void) {
+	int GetNM(void) {
 		return m_nm;
 	}
 	float GetFreq(void) {
@@ -120,10 +130,28 @@ public:
 	std::string GetSocket(void) {
 		return m_socket;
 	}
-
 	CPU& AddProduct(void) {
+		SetName();
 		SetCore().SetThreads().SetSocket().SetWeight().SetHeight().SetTDP().SetNM().SetFreq().SetPrice().SetReleaseDate();
+		std::cout << "Succes!!\n";
+		Sleep(700);
 		return *this;
+	}
+	void RegisterProduct(std::string filename) {
+		std::fstream recordP;
+		recordP.open(filename, std::fstream::app | std::fstream::out);
+		recordP << "CPU; ";
+		recordP << GetName() << "; ";
+		recordP << GetCore() << "; ";
+		recordP << GetThreads() << "; ";
+		recordP << GetSocket() << "; ";
+		recordP << GetWeight() << "; ";
+		recordP << GetHeight() << "; ";
+		recordP << GetTDP() << "; ";
+		recordP << GetFreq() << "; ";
+		recordP << GetPrice() << "; ";
+		recordP << GetReleaseDate() << ";\n";
+		recordP.close();
 	}
 };
 class GPU :public virtual Product {
@@ -150,26 +178,62 @@ public:
 	std::string GetMaxResolution(void) {
 		return m_max_resolution;
 	}
-
 	GPU& AddProduct(void) {
+		SetName();
 		SetMaxResolution().SetWeight().SetHeight().SetTDP().SetNM().SetFreq().SetPrice().SetReleaseDate();
 		return *this;
+	}
+	void RegisterProduct(std::string filename) {
+		std::fstream recordP;
+		recordP.open(filename, std::fstream::app | std::fstream::out);
+		recordP << "GPU; ";
+		recordP << GetName() << "; ";
+		recordP << GetMaxResolution() << "; ";
+		recordP << GetWeight() << "; ";
+		recordP << GetHeight() << "; ";
+		recordP << GetTDP() << "; ";
+		recordP << GetNM() << "; ";
+		recordP << GetFreq() << "; ";
+		recordP << GetPrice() << "; ";
+		recordP << GetReleaseDate() << ";\n";
+		recordP.close();
 	}
 };
 class APU : public CPU, public GPU {
 public:
 	GPU& AddProduct(void) {
+		SetName();
 		SetCore().SetThreads().SetSocket();
 		SetMaxResolution().SetWeight().SetHeight().SetTDP().SetNM().SetFreq().SetPrice().SetReleaseDate();
 		return *this;
 	}
+	void RegisterProduct(std::string filename) {
+		std::fstream recordP;
+		recordP.open(filename, std::fstream::app | std::fstream::out);
+		recordP << "APU; ";
+		recordP << GetName() << "; ";
+		recordP << GetCore() << "; ";
+		recordP << GetThreads() << "; ";
+		recordP << GetSocket() << "; ";
+		recordP << GetMaxResolution() << "; ";
+		recordP << GetWeight() << "; ";
+		recordP << GetHeight() << "; ";
+		recordP << GetTDP() << "; ";
+		recordP << GetFreq() << "; ";
+		recordP << GetPrice() << "; ";
+		recordP << GetReleaseDate() << ";\n";
+		recordP.close();
+	}
 };
+
+
+
 class User {
 public:
-	int m_id;
+	int m_id=0;
 	std::string m_username;
 	std::string m_password;
-	bool m_roleType;
+	bool m_roleType=0;
 
 	User& AddMod(User& x) {
 		x.m_roleType = 1;
@@ -180,19 +244,12 @@ public:
 bool verify_singup(std::string x);
 void signup(User& x);
 bool login(User& x);
-void MainMenu(void);
 void SecondaryMenu(bool type);
+void MainMenu(void);
+void MeniuTipProdus(void);
+
 
 int main() {
-	User admin;
-	admin.m_id = 0;
-	admin.m_password = "admin";
-	admin.m_roleType = 1;
-	admin.m_username = "admin";
-
-	/*APU y;
-	y.AddProduct();
-	std::cout<<y.GetWeight();*/
 	MainMenu();
 	return 0;
 }
@@ -202,7 +259,7 @@ start:
 	static int id = 1;
 	std::fstream nextId;
 	nextId.open("nextid_register.txt", std::fstream::in);
-	if (!(nextId >> id));
+	nextId >> id;
 	nextId.close();
 	std::cout << "username: ";
 	std::cin >> x.m_username;
@@ -308,7 +365,7 @@ start:
 		std::cout << "Your choice: ";
 		std::cin >> option;
 		switch (option) {
-		case 1: { /*AddProduct in database (products.txt, delimitat de ;)*/ system("cls"); goto start; }
+		case 1: { system("cls"); MeniuTipProdus(); goto start; }
 		case 2: { system("cls"); /*Lista products.txt*/; goto start; }
 		case 3: {/*DeleteProduct per linie (un alt fisier cu datele fara cel selectat, temp.txt, apoi stergere cel vechi si redenumire temp.txt in products.txt*/ system("cls"); goto start; }
 		case 4: {/*change type, procedura asemanatoare ca la delete*/  system("cls"); goto start; }
@@ -330,5 +387,20 @@ start:
 		case 4: {system("cls"); MainMenu(); break; }
 		default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
 		}
+	}
+}
+
+void MeniuTipProdus(void) {
+	int option;
+	std::cout << "Choose type of product:";
+	std::cout << "\n1. CPU\n";
+	std::cout << "2. GPU\n";
+	std::cout << "3. APU\n";
+	std::cout << "Your choice: ";
+	std::cin >> option;
+	switch (option) {
+	case 1: {CPU x; x.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
+	case 2: {GPU x; x.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
+	case 3: {APU x; x.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
 	}
 }

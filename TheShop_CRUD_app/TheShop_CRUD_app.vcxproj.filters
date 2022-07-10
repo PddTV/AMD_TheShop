@@ -26,5 +26,8 @@
     <Text Include="nextid_register.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="products_database.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

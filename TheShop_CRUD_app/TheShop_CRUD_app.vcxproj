@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="nextid_register.txt" />
+    <Text Include="products_database.txt" />
     <Text Include="records.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
