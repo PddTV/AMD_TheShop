@@ -19,8 +19,6 @@ start:
 	std::cout << "3. Exit\n\n";
 	std::cout << "Your choice: "; fflush(stdin);
 	std::cin >> option;
-	std::cout << option;
-	std::cout << "debug";
 	switch (option) {
 	case 1: {system("cls"); signup(x); goto start; }
 	case 2: {system("cls"); SecondaryMenu(login(x)); goto start; }
@@ -71,8 +69,7 @@ void SecondaryMenu(bool type) {
 			std::cout << "4. Delete a product from cart\n";
 			std::cout << "5. Return to Main Menu\n";
 			std::cout << "Your choice: ";
-			if (std::cin >> option && isdigit(option));
-			//else { option = 0; std::cout << "ERROR!!No valid option!!\n"; Sleep(700); system("cls"); goto start; }
+			std::cin >> option;
 
 
 			switch (option) {
@@ -82,9 +79,8 @@ void SecondaryMenu(bool type) {
 				std::cin.ignore();
 				std::cout << "\nName of product: "; fflush(stdin);
 				std::cin.getline(nameproduct, 100, '\n');
-				//std::cout << nameproduct << std::endl;
-				AddProduct(nameproduct, x.m_username); system("pause");
-				//system("cls"); 
+				AddProduct(nameproduct, x.m_username);
+				system("cls"); 
 				break;
 			}
 			case 3: { system("cls");

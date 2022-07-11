@@ -92,11 +92,8 @@ void AddProduct(char product_name[], std::string username) {
 	while (readproduct >> type) {
 		readproduct.ignore();
 		readproduct.getline(name, 100, ';');
-		std::cout << ">>" << name << "<< " << strcmp(name, product_name) << ">>";
-		std::cout << product_name << "<<\n";
 		if ((strcmp(name, product_name)) == 0)
 		{
-			//----------------------CitireProdus----------------------//
 			if (type == "CPU") {
 				readproduct.getline(core, 10, ';');
 				readproduct.getline(threads, 10, ';');
@@ -137,12 +134,10 @@ void AddProduct(char product_name[], std::string username) {
 				readproduct.getline(price, 10, ';');
 				readproduct.getline(releasedate, 10, ';');
 			}
-			//--------------------------------------------------------//
 			std::fstream writef;
 			std::string filename;
 			filename = username + "_cart.txt";
 			writef.open(filename, std::fstream::app | std::fstream::out);
-			//----------------------ScriereProdus----------------------//
 			writef << type << ' ' << name << "; ";
 			if (type == "CPU") {
 				writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
@@ -153,7 +148,6 @@ void AddProduct(char product_name[], std::string username) {
 			else {
 				writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
 			}
-			//---------------------------------------------------------//
 			writef.close();
 		}
 		else
@@ -201,6 +195,7 @@ void AddProduct(char product_name[], std::string username) {
 		}
 	}
 	readproduct.close();
+	std::cout << "Success!!"; Sleep(700);
 }
 void DeleteProduct(char product_name[], std::string filename) {
 	std::fstream readproduct;
@@ -211,12 +206,7 @@ void DeleteProduct(char product_name[], std::string filename) {
 	char str[5000];
 	while (readproduct >> type) {
 		readproduct.getline(name, 100, ';');
-		//std::cout << name << "<<\n";
 		strcpy_s(name, name + 1);
-		std::cout << ">>" << product_name << "<< ";
-		std::cout << strcmp(product_name, name) << " >>";
-		std::cout << name << "<<\n";
-		system("pause");
 		if (strcmp(product_name, name))
 		{
 			std::fstream writeproduct;
@@ -241,7 +231,9 @@ void DeleteProduct(char product_name[], std::string filename) {
 		rename("temp.txt", filenm);
 		Sleep(700);
 	}
-	else std::cerr << "\nNu s-a gasit produs";
+	else {
+		std::cerr << "\nNu s-a gasit produs"; Sleep(700);
+	}
 	std::cin.ignore();
 
 }

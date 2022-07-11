@@ -40,7 +40,7 @@ start_login:
 	std::string username, password, usern, pass;
 	int lgid, roletype;
 
-	system("cls");//curata ecranul;
+	system("cls");
 	std::cout << "username: ";
 	std::cin >> username;
 	std::cout << "password: ";
