@@ -296,17 +296,17 @@ void MeniuTipProdus(void);
 void ElementeProduct(float weight, float height, float TDP, int nm, int memory, float freq, float price, char releasedate[]);
 void ElementeCPU(int core, int threads, std::string socket);
 void ElementeGPU(std::string max_resolurion, char tech[]);
-//void DeleteProduct(std::string product_name, std::string filename);
 void ListProduct(std::string filename);
+void DeleteProduct(std::string product_name, std::string filename);
 //void Filter(int option, User& criteria);
 //void FilterP(int compare_option, User& criteria);
-void AddProduct(char product_name[], std::string username);
+void AddProduct(std::string product_name, std::string username);
 
 int main() {
 	MainMenu();
 	return 0;
 }
-
+User x;
 void signup(User& x) {
 start:
 	static int id = 1;
@@ -388,7 +388,7 @@ bool verify_singup(std::string x) {
 	return 1;
 }
 void MainMenu(void) {
-	User x;
+	
 	int option;
 	std::cout << "AMD Shop Menu:\n";
 start:
@@ -420,9 +420,16 @@ start:
 		switch (option) {
 		case 1: { system("cls"); MeniuTipProdus(); goto start; }
 		case 2: { system("cls"); ListProduct("products.txt"); goto start; }
-		case 3: {/*DeleteProduct per linie (un alt fisier cu datele fara cel selectat, temp.txt, apoi stergere cel vechi si redenumire temp.txt in products.txt*/ system("cls"); goto start; }
+		case 3: { 
+			std::string product_name;
+			std::cin.ignore();
+			std::cout << "Product name: ";
+			std::cin >> product_name;
+			DeleteProduct(product_name, "products.txt"); 
+			//system("cls"); 
+			goto start; 
+		}
 		case 4: {
-			User x;
 			std::string username;
 			std::cout << "\n username: ";
 			std::cin >> username;
@@ -433,17 +440,36 @@ start:
 		}
 	}
 	else {
-		std::cout << "\n1. Add a product to cart\n";
-		std::cout << "2. Show the cart\n";
-		std::cout << "3. Delete a product from cart\n";
-		std::cout << "4. Return to Main Menu\n";
+		std::cout << "\n1. List of Products\n";
+		std::cout << "2. Add a product to cart\n";
+		std::cout << "3. Show the cart\n";
+		std::cout << "4. Delete a product from cart\n";
+		std::cout << "5. Return to Main Menu\n";
 		std::cout << "Your choice: ";
 		std::cin >> option;
+		std::cin.ignore();
 		switch (option) {
-		case 1: { /*AddProduct in cart (cart_username.txt, delimitat de ;)*/ system("cls"); goto start; }
-		case 2: { system("cls"); goto start; }
-		case 3: { /*DeleteProduct per linie (un alt fisier cu datele fara cel selectat, temp.txt, apoi stergere cel vechi si redenumire temp.txt in cart_username.txt*/ system("cls"); goto start; }
-		case 4: {system("cls"); MainMenu(); break; }
+		case 1: { system("cls"); ListProduct("products.txt"); goto start; }
+		case 2: { 
+			//char nameproduct[100];
+			std::string nameproduct;
+			//std::cin.ignore();
+			std::cout << "\nName of product: ";
+			std::cin >> nameproduct;
+			//std::cin.getline(nameproduct,100,'\n');
+			//std::cout << nameproduct << std::endl;
+			AddProduct(nameproduct, x.m_username);
+			//system("cls"); 
+			goto start; 
+		}
+		case 3: { system("cls"); goto start; }
+		case 4: { std::string product_name;
+			std::cout << "Product name: ";
+			std::cin >> product_name;
+			std::string filename = x.m_username + "_cart.txt";
+			DeleteProduct(product_name, filename);  system("cls"); goto start;
+		}
+		case 5: {system("cls"); MainMenu(); break; }
 		default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
 		}
 	}
@@ -457,13 +483,13 @@ void MeniuTipProdus(void) {
 	std::cout << "Your choice: ";
 	std::cin >> option;
 	switch (option) {
-	case 1: {CPU x; x.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
-	case 2: {GPU x; x.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
-	case 3: {APU x; x.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
+	case 1: {CPU y; y.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
+	case 2: {GPU y; y.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
+	case 3: {APU y; y.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
 	}
 }
 
-void ElementeProduct(float weight, float height, float TDP, int nm, int memory, float freq, float price, char releasedate[]) {
+void ElementeProduct(char weight[], char height[], char TDP[], char nm[], char memory[], char freq[], char price[], char releasedate[]) {
 	std::cout << "\n\t\t-> Weight: " << weight << "mm; ";
 	std::cout << "\n\t\t-> Height: " << height << "mm; ";
 	std::cout << "\n\t\t-> TDP: " << TDP << ';';
@@ -473,68 +499,230 @@ void ElementeProduct(float weight, float height, float TDP, int nm, int memory, 
 	std::cout << "\n\t\t-> Price: " << price << "Eur; ";
 	std::cout << "\n\t\t-> Release Date: " << releasedate << ';';
 }
-void ElementeCPU(int core, int threads, std::string socket) {
+void ElementeCPU(char core[], char threads[], char socket[]) {
 	std::cout << "\n\t\t-> Core: " << core << ';';
 	std::cout << "\n\t\t-> Threads: " << threads << ';';
 	std::cout << "\n\t\t-> Socket: " << socket << ';';
 }
-void ElementeGPU(std::string max_resolurion, char tech[]) {
+void ElementeGPU(char max_resolurion[], char tech[]) {
 	std::cout << "\n\t\t-> Max Resolution: " << max_resolurion << ';';
 	std::cout << "\n\t\t-> Support Technologies: " << tech << ';';
 }
-//,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 void ListProduct(std::string filename) {
-
-	char name[100], releasedate[25], tech[25];
-	int nm, memory, core, threads;
-	float weight, height, tdp, freq, price;
-	std::string type, socket, max_resolution;
+	std::string	type;
+	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
 	std::fstream read_from_file;
 	read_from_file.open(filename, std::fstream::in);
+	int i = 0;
 	while (read_from_file >> type) {
+		i++;
 		read_from_file.getline(name, 100, ';');
+		std::cout <<'\n'<< i << ". " << name << ": ";
 		if (type == "CPU") {
-			read_from_file >> core >> threads >> socket;//read_from_file.getline()
+			read_from_file.getline(core, 10, ';');
+			read_from_file.getline(threads, 10, ';');
+			read_from_file.getline(socket, 10, ';');
 			ElementeCPU(core, threads, socket); 
-			read_from_file >> weight >> height >> tdp >> nm >> memory >> freq >> price >> releasedate;
+			read_from_file.getline(weight, 10, ';');
+			read_from_file.getline(height, 10, ';');
+			read_from_file.getline(tdp, 10, ';');
+			read_from_file.getline(nm, 10, ';');
+			read_from_file.getline(memory, 10, ';');
+			read_from_file.getline(freq, 10, ';');
+			read_from_file.getline(price, 10, ';');
+			read_from_file.getline(releasedate, 10, ';');
 			ElementeProduct(weight, height, tdp, nm, memory, freq, price, releasedate);
 		}
 		else if (type == "GPU") {
-			read_from_file >> max_resolution;
+			read_from_file.getline(max_resolution, 15, ';');
 			read_from_file.getline(tech, 25, ';');
 			ElementeGPU(max_resolution,tech); 
-			read_from_file >> weight >> height >> tdp >> nm >> memory >> freq >> price >> releasedate;
+			read_from_file.getline(weight, 10, ';');
+			read_from_file.getline(height, 10, ';');
+			read_from_file.getline(tdp, 10, ';');
+			read_from_file.getline(nm, 10, ';');
+			read_from_file.getline(memory, 10, ';');
+			read_from_file.getline(freq, 10, ';');
+			read_from_file.getline(price, 10, ';');
+			read_from_file.getline(releasedate, 10, ';');
 			ElementeProduct(weight, height, tdp, nm, memory, freq, price, releasedate);
 		}
 		else {
-			read_from_file >> core >> threads >> socket;
+			read_from_file.getline(core, 10, ';');
+			read_from_file.getline(threads, 10, ';');
+			read_from_file.getline(socket, 10, ';');
 			ElementeCPU(core, threads, socket); 
-			read_from_file >> max_resolution;
+			read_from_file.getline(max_resolution, 15, ';');
 			read_from_file.getline(tech, 25, ';');
 			ElementeGPU(max_resolution, tech); 
-			read_from_file >> weight >> height >> tdp >> nm >> memory >> freq >> price >> releasedate;
+			read_from_file.getline(weight, 10, ';');
+			read_from_file.getline(height, 10, ';');
+			read_from_file.getline(tdp, 10, ';');
+			read_from_file.getline(nm, 10, ';');
+			read_from_file.getline(memory, 10, ';');
+			read_from_file.getline(freq, 10, ';');
+			read_from_file.getline(price, 10, ';');
+			read_from_file.getline(releasedate, 10, ';');
 			ElementeProduct(weight, height, tdp, nm, memory, freq, price, releasedate);
 		}
 	}
+	read_from_file.close();
 }
-//````````````````````````````````````````````
-void AddProduct(char product_name[], std::string username) {
+
+void AddProduct(/*char*/std::string product_name, std::string username) {
 	std::string type;
+	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
 	std::fstream readproduct;
-	char product[100];
 	readproduct.open("products.txt", std::fstream::in);
 	while (readproduct >> type) {
-		readproduct.getline(product, 100, ';');
-		if (!strcmp(product, product_name))
+		readproduct.getline(name, 100, ';');
+		char prdnm[100]; ;
+		strcpy_s(prdnm, product_name.c_str());
+		std::cout << name << ' ' << strcmp(name, prdnm) << ' ';
+		std::cout << product_name<< '\n';
+		//PROBLEMA LA COMPARARE
+		if ((strcmp(name, prdnm))==0)
 		{
-			//citeste si celelalte atribute;
+			//----------------------CitireProdus----------------------//
+			if (type == "CPU") {
+				readproduct.getline(core, 10, ';');
+				readproduct.getline(threads, 10, ';');
+				readproduct.getline(socket, 10, ';');
+				readproduct.getline(weight, 10, ';');
+				readproduct.getline(height, 10, ';');
+				readproduct.getline(tdp, 10, ';');
+				readproduct.getline(nm, 10, ';');
+				readproduct.getline(memory, 10, ';');
+				readproduct.getline(freq, 10, ';');
+				readproduct.getline(price, 10, ';');
+				readproduct.getline(releasedate, 10, ';');
+			}
+			else if (type == "GPU") {
+				readproduct.getline(max_resolution, 15, ';');
+				readproduct.getline(tech, 25, ';');
+				readproduct.getline(weight, 10, ';');
+				readproduct.getline(height, 10, ';');
+				readproduct.getline(tdp, 10, ';');
+				readproduct.getline(nm, 10, ';');
+				readproduct.getline(memory, 10, ';');
+				readproduct.getline(freq, 10, ';');
+				readproduct.getline(price, 10, ';');
+				readproduct.getline(releasedate, 10, ';');
+			}
+			else {
+				readproduct.getline(core, 10, ';');
+				readproduct.getline(threads, 10, ';');
+				readproduct.getline(socket, 10, ';');
+				readproduct.getline(max_resolution, 15, ';');
+				readproduct.getline(tech, 25, ';');
+				readproduct.getline(weight, 10, ';');
+				readproduct.getline(height, 10, ';');
+				readproduct.getline(tdp, 10, ';');
+				readproduct.getline(nm, 10, ';');
+				readproduct.getline(memory, 10, ';');
+				readproduct.getline(freq, 10, ';');
+				readproduct.getline(price, 10, ';');
+				readproduct.getline(releasedate, 10, ';');
+			}
+			//--------------------------------------------------------//
 			std::fstream writef;
 			std::string filename;
-			filename = "/home/Cart/" + username + "_cart.txt";
+			filename = username + "_cart.txt";
 			writef.open(filename, std::fstream::app | std::fstream::out);
-			//scrie in fisier dupa type;->sa se rezolve ListProducts
+			//----------------------ScriereProdus----------------------//
+			writef << type << ' ' << name << "; ";
+			if (type == "CPU") {
+				writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+			}
+			else if (type == "GPU") {
+				writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+			}
+			else {
+				writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+			}
+			//---------------------------------------------------------//
+			writef.close();
 		}
-		else readproduct.ignore(unsigned(-1), '\n');//ignora celelalte citiri si se trece pe linia urmatoare;
+		else
+		{
+			if (type == "CPU") {
+				readproduct.getline(core, 10, ';');
+				readproduct.getline(threads, 10, ';');
+				readproduct.getline(socket, 10, ';');
+				readproduct.getline(weight, 10, ';');
+				readproduct.getline(height, 10, ';');
+				readproduct.getline(tdp, 10, ';');
+				readproduct.getline(nm, 10, ';');
+				readproduct.getline(memory, 10, ';');
+				readproduct.getline(freq, 10, ';');
+				readproduct.getline(price, 10, ';');
+				readproduct.getline(releasedate, 10, ';');
+			}
+			else if (type == "GPU") {
+				readproduct.getline(max_resolution, 15, ';');
+				readproduct.getline(tech, 25, ';');
+				readproduct.getline(weight, 10, ';');
+				readproduct.getline(height, 10, ';');
+				readproduct.getline(tdp, 10, ';');
+				readproduct.getline(nm, 10, ';');
+				readproduct.getline(memory, 10, ';');
+				readproduct.getline(freq, 10, ';');
+				readproduct.getline(price, 10, ';');
+				readproduct.getline(releasedate, 10, ';');
+			}
+			else {
+				readproduct.getline(core, 10, ';');
+				readproduct.getline(threads, 10, ';');
+				readproduct.getline(socket, 10, ';');
+				readproduct.getline(max_resolution, 15, ';');
+				readproduct.getline(tech, 25, ';');
+				readproduct.getline(weight, 10, ';');
+				readproduct.getline(height, 10, ';');
+				readproduct.getline(tdp, 10, ';');
+				readproduct.getline(nm, 10, ';');
+				readproduct.getline(memory, 10, ';');
+				readproduct.getline(freq, 10, ';');
+				readproduct.getline(price, 10, ';');
+				readproduct.getline(releasedate, 10, ';');
+			}
+		}
 	}
-	
+	readproduct.close();
 }
+/*PARTIAL FUNCTIONAL*/
+
+void DeleteProduct(std::string product_name, std::string filename) {
+	product_name += ";";
+	std::fstream readproduct;
+	readproduct.open(filename, std::fstream::in); 
+	std::string type, name;
+	bool valid=0;
+	char str[5000];
+	while (readproduct >> type>>name) {
+		std::cout << product_name<<" ";
+		std::cout << name<<'\n';
+		if (name != product_name) {
+			std::fstream writeproduct;
+			writeproduct.open("temp.txt", std::fstream::app | std::fstream::out);
+			writeproduct << type << ' ' << name << ' ';
+			readproduct.getline(str, 5000, '\n');
+			writeproduct << str << '\n';
+			valid = 1;
+			writeproduct.close();
+		}
+		readproduct.ignore(5000i64, '\n');
+	}
+	readproduct.close();
+	if (valid) {
+		std::cout << "\nSuccess";
+		char filenm[100];
+		strcpy_s(filenm, filename.c_str());
+		remove(filenm);
+		rename("temp.txt", filenm);
+		Sleep(700);
+	}
+	else std::cerr << "\nNu s-a gasit produs";
+	std::cin.ignore();
+
+}
+/*PARTIAL FUNCTIONAL*/
