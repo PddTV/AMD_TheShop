@@ -286,6 +286,11 @@ public:
 		rename("temp.txt", "users.txt");
 	}
 };
+User x;
+
+//===========================
+// Antet Section
+//===========================
 
 bool verify_singup(std::string x);
 void signup(User& x);
@@ -300,13 +305,22 @@ void ListProduct(std::string filename);
 void DeleteProduct(std::string product_name, std::string filename);
 //void Filter(int option, User& criteria);
 //void FilterP(int compare_option, User& criteria);
-void AddProduct(std::string product_name, std::string username);
+void AddProduct(char product_name[], std::string username);
+
+//===========================
+// Main Section
+//===========================
 
 int main() {
 	MainMenu();
 	return 0;
 }
-User x;
+
+//===========================
+// Functions Section
+//===========================
+
+
 void signup(User& x) {
 start:
 	static int id = 1;
@@ -396,83 +410,94 @@ start:
 	std::cout << "1. SignUp\n";
 	std::cout << "2. SignIn and Enter to your menu\n";
 	std::cout << "3. Exit\n\n";
-	std::cout << "Your choice: ";
-	std::cin >> option;
-	switch (option) {
-	case 1: {system("cls"); signup(x); goto start; }
-	case 2: {system("cls"); SecondaryMenu(login(x)); goto start; }
-	case 3: {system("cls"); std::exit(-99); }
-	default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
-	}
+	std::cout << "Your choice: "; fflush(stdin);
+	std::cin >> option; 
+		std::cout << option;
+		std::cout << "debug";
+		switch (option) {
+		case 1: {system("cls"); signup(x); goto start; }
+		case 2: {system("cls"); SecondaryMenu(login(x)); goto start; }
+		case 3: {system("cls"); std::exit(-99); }
+		default: { std::cout << "No valid option!!\n"; fflush(stdin); Sleep(700); system("cls"); goto start; }
+		}
+	
 }
 void SecondaryMenu(bool type) {
-start:
-	int option;
-	if (type)
-	{
-		std::cout << "\n1. Add a product in database\n";
-		std::cout << "2. List of products from database\n";
-		std::cout << "3. Delete a product from database\n";
-		std::cout << "4. Add admin\n";
-		std::cout << "5. Return to Main Menu\n\n";
-		std::cout << "Your choice: ";
-		std::cin >> option;
-		switch (option) {
-		case 1: { system("cls"); MeniuTipProdus(); goto start; }
-		case 2: { system("cls"); ListProduct("products.txt"); goto start; }
-		case 3: { 
-			std::string product_name;
-			std::cin.ignore();
-			std::cout << "Product name: ";
-			std::cin >> product_name;
-			DeleteProduct(product_name, "products.txt"); 
-			//system("cls"); 
-			goto start; 
+	while (~0) {
+		if (type)
+		{
+			int option;
+			std::cout << "\n1. Add a product in database\n";
+			std::cout << "2. List of products from database\n";
+			std::cout << "3. Delete a product from database\n";
+			std::cout << "4. Add admin\n";
+			std::cout << "5. Return to Main Menu\n\n";
+			std::cout << "Your choice: ";
+			std::cin >> option;
+			switch (option) {
+			case 1: { system("cls"); MeniuTipProdus(); break; }
+			case 2: { system("cls"); ListProduct("products.txt"); break; }
+			case 3: {
+				std::string product_name;
+				std::cin.ignore();
+				std::cout << "Product name: ";
+				std::cin >> product_name;
+				DeleteProduct(product_name, "products.txt");
+				//system("cls"); 
+				break;
+			}
+			case 4: {
+				std::string username;
+				std::cout << "\n username: ";
+				std::cin >> username;
+				x.AddMod(username); system("cls"); break;
+			}
+			case 5: {system("cls"); MainMenu(); break; }
+			default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); break; }
+			}
 		}
-		case 4: {
-			std::string username;
-			std::cout << "\n username: ";
-			std::cin >> username;
-			x.AddMod(username); system("cls"); goto start;
+		else {
+			int option;
+			std::cout << "\n1. List of Products\n";
+			std::cout << "2. Add a product to cart\n";
+			std::cout << "3. Show the cart\n";
+			std::cout << "4. Delete a product from cart\n";
+			std::cout << "5. Return to Main Menu\n";
+			std::cout << "Your choice: ";
+			if (std::cin >> option && isdigit(option));
+			//else { option = 0; std::cout << "ERROR!!No valid option!!\n"; Sleep(700); system("cls"); goto start; }
+
+
+			switch (option) {
+			case 1: { system("cls"); ListProduct("products.txt"); break; }
+			case 2: {
+				char nameproduct[100];
+				std::cin.ignore();
+				std::cout << "\nName of product: "; fflush(stdin);
+				std::cin.getline(nameproduct,100,'\n');
+				//std::cout << nameproduct << std::endl;
+				AddProduct(nameproduct, x.m_username); system("pause");
+				//system("cls"); 
+				break;
+			}
+			case 3: { system("cls");
+				std::string filename = x.m_username + "_cart.txt";
+				ListProduct(filename); break;
+			}
+			case 4: { char product_name[100];
+				std::cout << "Product name: ";
+				std::cin.getline(product_name, 100, '\n'); std::cin.ignore();
+				std::string filename = x.m_username + "_cart.txt";
+				DeleteProduct(product_name, filename);  system("cls"); break;
+			}
+			case 5: {system("cls"); MainMenu(); break; }
+			default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); fflush(stdin); std::cin.ignore(); break; }
+			}
 		}
-		case 5: {system("cls"); MainMenu(); break; }
-		default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
-		}
-	}
-	else {
-		std::cout << "\n1. List of Products\n";
-		std::cout << "2. Add a product to cart\n";
-		std::cout << "3. Show the cart\n";
-		std::cout << "4. Delete a product from cart\n";
-		std::cout << "5. Return to Main Menu\n";
-		std::cout << "Your choice: ";
-		std::cin >> option;
-		std::cin.ignore();
-		switch (option) {
-		case 1: { system("cls"); ListProduct("products.txt"); goto start; }
-		case 2: { 
-			//char nameproduct[100];
-			std::string nameproduct;
-			//std::cin.ignore();
-			std::cout << "\nName of product: ";
-			std::cin >> nameproduct;
-			//std::cin.getline(nameproduct,100,'\n');
-			//std::cout << nameproduct << std::endl;
-			AddProduct(nameproduct, x.m_username);
-			//system("cls"); 
-			goto start; 
-		}
-		case 3: { system("cls"); goto start; }
-		case 4: { std::string product_name;
-			std::cout << "Product name: ";
-			std::cin >> product_name;
-			std::string filename = x.m_username + "_cart.txt";
-			DeleteProduct(product_name, filename);  system("cls"); goto start;
-		}
-		case 5: {system("cls"); MainMenu(); break; }
-		default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); goto start; }
-		}
-	}
+}
+	
+	
+	
 }
 void MeniuTipProdus(void) {
 	int option;
@@ -569,19 +594,17 @@ void ListProduct(std::string filename) {
 	read_from_file.close();
 }
 
-void AddProduct(/*char*/std::string product_name, std::string username) {
+void AddProduct(char product_name[], std::string username) {
 	std::string type;
 	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
 	std::fstream readproduct;
 	readproduct.open("products.txt", std::fstream::in);
 	while (readproduct >> type) {
+		readproduct.ignore();
 		readproduct.getline(name, 100, ';');
-		char prdnm[100]; ;
-		strcpy_s(prdnm, product_name.c_str());
-		std::cout << name << ' ' << strcmp(name, prdnm) << ' ';
-		std::cout << product_name<< '\n';
-		//PROBLEMA LA COMPARARE
-		if ((strcmp(name, prdnm))==0)
+		std::cout <<">>" << name <<"<< " << strcmp(name, product_name) <<">>";
+		std::cout << product_name<<"<<\n";
+		if ((strcmp(name, product_name))==0)
 		{
 			//----------------------CitireProdus----------------------//
 			if (type == "CPU") {
