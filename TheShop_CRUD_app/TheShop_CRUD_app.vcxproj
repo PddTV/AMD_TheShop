@@ -139,12 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="products.cpp" />
     <ClCompile Include="TheShop_CRUD_app.cpp" />
+    <ClCompile Include="users.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="nextid_register.txt" />
-    <Text Include="products_database.txt" />
-    <Text Include="records.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="products.h" />
+    <ClInclude Include="users.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

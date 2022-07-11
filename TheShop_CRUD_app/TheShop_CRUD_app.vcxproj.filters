@@ -18,16 +18,30 @@
     <ClCompile Include="TheShop_CRUD_app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="products.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="users.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="records.txt">
-      <Filter>Source Files</Filter>
-    </Text>
     <Text Include="nextid_register.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="products_database.txt">
-      <Filter>Source Files</Filter>
-    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="products.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="users.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

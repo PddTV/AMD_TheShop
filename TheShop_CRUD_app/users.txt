@@ -1,2 +1,3 @@
 1 admin admin 1
-2 paul 1234 0
+2 paul 1234 1
+3 client 0000 1
