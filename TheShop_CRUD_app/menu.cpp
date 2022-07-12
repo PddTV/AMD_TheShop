@@ -2,9 +2,9 @@
 #include <string>
 #include <fstream>
 #include <Windows.h>
-#include "menu.h"
 #include "users.h"
 #include "products.h"
+#include "menu.h"
 
 User x;
 

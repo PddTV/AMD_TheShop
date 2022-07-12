@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 
 void SecondaryMenu(bool type);

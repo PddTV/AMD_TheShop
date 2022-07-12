@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <Windows.h>
+#include <fstream>
 #include "products.h"
-
 
 void ElementeProduct(char weight[], char height[], char TDP[], char nm[], char memory[], char freq[], char price[], char releasedate[]) {
 	std::cout << "\n\t\t-> Weight: " << weight << "mm; ";
@@ -236,4 +236,111 @@ void DeleteProduct(char product_name[], std::string filename) {
 	}
 	std::cin.ignore();
 
+}
+void Filter(std::string criteria, char compare_option, std::string value) {
+	std::string type;
+	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
+	std::fstream read;
+	read.open("products.txt", std::fstream::in);
+	while (read >> type) {
+		read.getline(name, 100, ';');
+		if (type == "CPU") {
+			read.getline(core, 10, ';');
+			read.getline(threads, 10, ';');
+			read.getline(socket, 10, ';');
+			read.getline(weight, 10, ';');
+			read.getline(height, 10, ';');
+			read.getline(tdp, 10, ';');
+			read.getline(nm, 10, ';');
+			read.getline(memory, 10, ';');
+			read.getline(freq, 10, ';');
+			read.getline(price, 10, ';');
+			read.getline(releasedate, 10, ';');
+		}
+		else if (type == "GPU") {
+			read.getline(max_resolution, 15, ';');
+			read.getline(tech, 25, ';');
+			read.getline(weight, 10, ';');
+			read.getline(height, 10, ';');
+			read.getline(tdp, 10, ';');
+			read.getline(nm, 10, ';');
+			read.getline(memory, 10, ';');
+			read.getline(freq, 10, ';');
+			read.getline(price, 10, ';');
+			read.getline(releasedate, 10, ';');
+		}
+		else {
+			read.getline(core, 10, ';');
+			read.getline(threads, 10, ';');
+			read.getline(socket, 10, ';');
+			read.getline(max_resolution, 15, ';');
+			read.getline(tech, 25, ';');
+			read.getline(weight, 10, ';');
+			read.getline(height, 10, ';');
+			read.getline(tdp, 10, ';');
+			read.getline(nm, 10, ';');
+			read.getline(memory, 10, ';');
+			read.getline(freq, 10, ';');
+			read.getline(price, 10, ';');
+			read.getline(releasedate, 10, ';');
+		}
+		switch (compare_option) {
+		case '<': {
+			if (criteria <= value) {
+				std::fstream writef;
+				writef.open("filter.txt", std::fstream::app | std::fstream::out);
+				writef << type << ' ' << name << "; ";
+				if (type == "CPU") {
+					writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				else if (type == "GPU") {
+					writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				else {
+					writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				writef.close();
+			}
+			break;
+		}
+		case '>': {
+			if (criteria >= value) {
+				std::fstream writef;
+				writef.open("filter.txt", std::fstream::app | std::fstream::out);
+				writef << type << ' ' << name << "; ";
+				if (type == "CPU") {
+					writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				else if (type == "GPU") {
+					writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				else {
+					writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				writef.close();
+			}
+			break;
+		}
+		case '=': {
+			if (criteria == value) {
+				std::fstream writef;
+				writef.open("filter.txt", std::fstream::app | std::fstream::out);
+				writef << type << ' ' << name << "; ";
+				if (type == "CPU") {
+					writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				else if (type == "GPU") {
+					writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				else {
+					writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+				}
+				writef.close();
+			}
+			break;
+		}
+		}
+	}
+	read.close();
+	ListProduct("filter.txt");
 }

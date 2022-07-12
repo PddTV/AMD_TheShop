@@ -1,7 +1,9 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <Windows.h>
 #include <fstream>
+#include "users.h"
 
 class Product {
 protected:
@@ -228,12 +230,12 @@ public:
 	}
 };
 
-void ElementeProduct(float weight, float height, float TDP, int nm, int memory, float freq, float price, char releasedate[]);
-void ElementeCPU(int core, int threads, std::string socket);
-void ElementeGPU(std::string max_resolurion, char tech[]);
+void ElementeProduct(char weight[], char height[], char TDP[], char nm[], char memory[], char freq[], char price[], char releasedate[]);
+void ElementeCPU(char core[], char threads[], char socket[]);
+void ElementeGPU(char max_resolurion[], char tech[]);
 
 void ListProduct(std::string filename);
 void DeleteProduct(char product_name[], std::string filename);
 void AddProduct(char product_name[], std::string username);
-//void Filter(int option, User& criteria);
-//void FilterP(int compare_option, User& criteria);
+
+void Filter(std::string criteria, char compare_option, std::string value);
