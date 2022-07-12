@@ -67,7 +67,8 @@ void SecondaryMenu(bool type) {
 			std::cout << "2. Add a product to cart\n";
 			std::cout << "3. Show the cart\n";
 			std::cout << "4. Delete a product from cart\n";
-			std::cout << "5. Return to Main Menu\n";
+			std::cout << "5. Filter products\n";
+			std::cout << "6. Return to Main Menu\n";
 			std::cout << "Your choice: ";
 			std::cin >> option;
 
@@ -93,7 +94,10 @@ void SecondaryMenu(bool type) {
 				std::string filename = x.m_username + "_cart.txt";
 				DeleteProduct(product_name, filename);  system("cls"); break;
 			}
-			case 5: {system("cls"); MainMenu(); break; }
+			case 5: {
+				system("cls"); MainFilter(); system("pause"); break;
+			}
+			case 6: {system("cls"); MainMenu(); break; }
 			default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); fflush(stdin); std::cin.ignore(); break; }
 			}
 		}
@@ -115,4 +119,35 @@ void MeniuTipProdus(void) {
 	case 2: {GPU y; y.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
 	case 3: {APU y; y.AddProduct().RegisterProduct("products.txt"); system("cls"); SecondaryMenu(1); break; }
 	}
+}
+int MeniuFilter1(void){
+	int option;
+start:
+	std::cout << "1. Select filter criteria:\n";
+	std::cout << "\t 1. Type of Product \n";
+	std::cout << "\t 2. Name \n";
+	std::cout << "\t 3. Core \n";
+	std::cout << "\t 4. Threads \n";
+	std::cout << "\t 5. Support Technology (OpenGL/DirectX) \n";
+	std::cout << "\t 6. Weight \n";
+	std::cout << "\t 7. Height \n";
+	std::cout << "\t 8. TDP \n";
+	std::cout << "\t 9. nm \n";
+	std::cout << "\t 10. Memory \n";
+	std::cout << "\t 11. Clock Frequency \n";
+	std::cout << "\t 12. Price \n";
+	std::cout << "\t 13. Release date (year)\n";
+	std::cout << "Your choice: "; fflush(stdin);
+	std::cin >> option;
+	return option;
+}
+int MeniuFilter2(void) {
+	int option;
+	std::cout << "1. Select filter compare:\n";
+	std::cout << "\t 1. Less than your value \n";
+	std::cout << "\t 2. More than your value \n";
+	std::cout << "\t 3. Equal as your value \n";
+	std::cout << "Your choice: "; fflush(stdin);
+	std::cin >> option;
+	return option;
 }

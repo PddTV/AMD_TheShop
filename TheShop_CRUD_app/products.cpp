@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <fstream>
 #include "products.h"
+#include "menu.h"
 
 void ElementeProduct(char weight[], char height[], char TDP[], char nm[], char memory[], char freq[], char price[], char releasedate[]) {
 	std::cout << "\n\t\t-> Weight: " << weight << "mm; ";
@@ -237,14 +238,14 @@ void DeleteProduct(char product_name[], std::string filename) {
 	std::cin.ignore();
 
 }
-void Filter(std::string criteria, char compare_option, std::string value) {
-	std::string type;
+void Filter(char criteria[], char compare_option, char value[]) {
+	char type[5];
 	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
 	std::fstream read;
 	read.open("products.txt", std::fstream::in);
 	while (read >> type) {
 		read.getline(name, 100, ';');
-		if (type == "CPU") {
+		if (!strcmp(type, "CPU")) {
 			read.getline(core, 10, ';');
 			read.getline(threads, 10, ';');
 			read.getline(socket, 10, ';');
@@ -257,7 +258,7 @@ void Filter(std::string criteria, char compare_option, std::string value) {
 			read.getline(price, 10, ';');
 			read.getline(releasedate, 10, ';');
 		}
-		else if (type == "GPU") {
+		else if (!strcmp(type, "CPU")) {
 			read.getline(max_resolution, 15, ';');
 			read.getline(tech, 25, ';');
 			read.getline(weight, 10, ';');
@@ -286,7 +287,7 @@ void Filter(std::string criteria, char compare_option, std::string value) {
 		}
 		switch (compare_option) {
 		case '<': {
-			if (criteria <= value) {
+			if (strcmp(criteria,value)<=0) {
 				std::fstream writef;
 				writef.open("filter.txt", std::fstream::app | std::fstream::out);
 				writef << type << ' ' << name << "; ";
@@ -304,7 +305,7 @@ void Filter(std::string criteria, char compare_option, std::string value) {
 			break;
 		}
 		case '>': {
-			if (criteria >= value) {
+			if (strcmp(criteria, value) >= 0) {
 				std::fstream writef;
 				writef.open("filter.txt", std::fstream::app | std::fstream::out);
 				writef << type << ' ' << name << "; ";
@@ -322,7 +323,7 @@ void Filter(std::string criteria, char compare_option, std::string value) {
 			break;
 		}
 		case '=': {
-			if (criteria == value) {
+			if (strcmp(criteria, value) == 0) {
 				std::fstream writef;
 				writef.open("filter.txt", std::fstream::app | std::fstream::out);
 				writef << type << ' ' << name << "; ";
@@ -344,3 +345,145 @@ void Filter(std::string criteria, char compare_option, std::string value) {
 	read.close();
 	ListProduct("filter.txt");
 }
+
+void MainFilter(void) {
+	char type[5];
+	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
+	std::fstream readf;
+	readf.open("products.txt", std::fstream::in);
+	while (readf >> type) {
+		readf.getline(name, 100, ';');
+		if (!strcmp(type, "CPU")) {
+			readf.getline(core, 10, ';');
+			readf.getline(threads, 10, ';');
+			readf.getline(socket, 10, ';');
+			readf.getline(weight, 10, ';');
+			readf.getline(height, 10, ';');
+			readf.getline(tdp, 10, ';');
+			readf.getline(nm, 10, ';');
+			readf.getline(memory, 10, ';');
+			readf.getline(freq, 10, ';');
+			readf.getline(price, 10, ';');
+			readf.getline(releasedate, 10, ';');
+		}
+		else if (!strcmp(type, "GPU")) {
+			readf.getline(max_resolution, 15, ';');
+			readf.getline(tech, 25, ';');
+			readf.getline(weight, 10, ';');
+			readf.getline(height, 10, ';');
+			readf.getline(tdp, 10, ';');
+			readf.getline(nm, 10, ';');
+			readf.getline(memory, 10, ';');
+			readf.getline(freq, 10, ';');
+			readf.getline(price, 10, ';');
+			readf.getline(releasedate, 10, ';');
+		}
+		else {
+			readf.getline(core, 10, ';');
+			readf.getline(threads, 10, ';');
+			readf.getline(socket, 10, ';');
+			readf.getline(max_resolution, 15, ';');
+			readf.getline(tech, 25, ';');
+			readf.getline(weight, 10, ';');
+			readf.getline(height, 10, ';');
+			readf.getline(tdp, 10, ';');
+			readf.getline(nm, 10, ';');
+			readf.getline(memory, 10, ';');
+			readf.getline(freq, 10, ';');
+			readf.getline(price, 10, ';');
+			readf.getline(releasedate, 10, ';');
+		}
+		int option1 = MeniuFilter1();
+		int option2 = MeniuFilter2();
+		char value[100];
+		select_option: 
+		std::cout << "Enter your value: ";
+		std::cin.getline(value, 100,'\n');
+		switch (option1)
+		{
+		case 1: {
+			if (option2 == 1) Filter(type, '<', value);
+			else if (option2 == 2) Filter(type, '>', value);
+			else if (option2 == 3) Filter(type, '=', value);
+			break;
+		}
+		case 2: {
+			if (option2 == 1) Filter(name, '<', value);
+			else if(option2 ==2 ) Filter(name, '>', value);
+			else if (option2 == 3) Filter(name, '=', value); 
+			break;
+		}
+		case 3: {
+			if (option2 == 1) Filter(core, '<', value);
+			else if (option2 == 2) Filter(core, '>', value);
+			else if (option2 == 3) Filter(core, '=', value); 
+			break;
+		}
+		case 4: {
+			if (option2 == 1) Filter(threads, '<', value);
+			else if (option2 == 2) Filter(threads, '>', value);
+			else if (option2 == 3) Filter(threads, '=', value); 
+			break;
+		}
+		case 5: {
+			if (option2 == 1) Filter(tech, '<', value);
+			else if (option2 == 2) Filter(tech, '>', value);
+			else if (option2 == 3) Filter(tech, '=', value); 
+			break;
+		}
+		case 6: {
+			if (option2 == 1) Filter(weight, '<', value);
+			else if (option2 == 2) Filter(weight, '>', value);
+			else if (option2 == 3) Filter(weight, '=', value); 
+			break;
+		}
+		case 7: {
+			if (option2 == 1) Filter(height, '<', value);
+			else if (option2 == 2) Filter(height, '>', value);
+			else if (option2 == 3) Filter(height, '=', value); 
+			break;
+		}
+		case 8: {
+			if (option2 == 1) Filter(tdp, '<', value);
+			else if (option2 == 2) Filter(tdp, '>', value);
+			else if (option2 == 3) Filter(tdp, '=', value); 
+			break;
+		}
+		case 9: {
+			if (option2 == 1) Filter(nm, '<', value);
+			else if (option2 == 2) Filter(nm, '>', value);
+			else if (option2 == 3) Filter(nm, '=', value); 
+			break;
+		}
+		case 10: {
+			if (option2 == 1) Filter(memory, '<', value);
+			else if (option2 == 2) Filter(memory, '>', value);
+			else if (option2 == 3) Filter(memory, '=', value); 
+			break;
+		}
+		case 11: {
+			if (option2 == 1) Filter(freq, '<', value);
+			else if (option2 == 2) Filter(freq, '>', value);
+			else if (option2 == 3) Filter(freq, '=', value); 
+			break;
+		}
+		case 12: {
+			if (option2 == 1) Filter(price, '<', value);
+			else if (option2 == 2) Filter(price, '>', value);
+			else if (option2 == 3) Filter(price, '=', value); 
+			break;
+		}
+		case 13: {
+			if (option2 == 1) Filter(releasedate, '<', value);
+			else if (option2 == 2) Filter(releasedate, '>', value);
+			else if(option2 == 3) Filter(releasedate, '=', value); 
+			break;
+		}
+		default: {
+			std::cerr << "No valid option!!";
+			goto select_option;
+		}
+		}
+}
+}
+	

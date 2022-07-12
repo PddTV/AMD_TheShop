@@ -238,4 +238,5 @@ void ListProduct(std::string filename);
 void DeleteProduct(char product_name[], std::string filename);
 void AddProduct(char product_name[], std::string username);
 
-void Filter(std::string criteria, char compare_option, std::string value);
+void Filter(char criteria[], char compare_option, char value[]);
+void MainFilter(void);
