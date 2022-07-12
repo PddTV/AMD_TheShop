@@ -74,7 +74,11 @@ void SecondaryMenu(bool type) {
 
 
 			switch (option) {
-			case 1: { system("cls"); ListProduct("products.txt"); break; }
+			case 1: { 
+				system("cls"); 
+				ListProduct("products.txt"); 
+				break;
+			}
 			case 2: {
 				char nameproduct[100];
 				std::cin.ignore();
@@ -95,9 +99,23 @@ void SecondaryMenu(bool type) {
 				DeleteProduct(product_name, filename);  system("cls"); break;
 			}
 			case 5: {
-				system("cls"); MainFilter(); system("pause"); break;
+				system("cls");
+				char value[100];
+				int option_criteria = MeniuFilter1();
+				int option_compare = MeniuFilter2();
+				std::cout << "3. Enter your value to filter: "; std::cin.ignore();
+				std::cin.getline(value, 100, '\n');
+				system("cls");
+				Filter(option_criteria, option_compare, value);
+				system("pause"); 
+				system("cls");
+				break;
 			}
-			case 6: {system("cls"); MainMenu(); break; }
+			case 6: {
+				system("cls");
+				MainMenu(); 
+				break; 
+			}
 			default: { std::cout << "No valid option!!\n"; Sleep(700); system("cls"); fflush(stdin); std::cin.ignore(); break; }
 			}
 		}
@@ -143,7 +161,7 @@ start:
 }
 int MeniuFilter2(void) {
 	int option;
-	std::cout << "1. Select filter compare:\n";
+	std::cout << "2. Select filter compare:\n";
 	std::cout << "\t 1. Less than your value \n";
 	std::cout << "\t 2. More than your value \n";
 	std::cout << "\t 3. Equal as your value \n";

@@ -238,7 +238,8 @@ void DeleteProduct(char product_name[], std::string filename) {
 	std::cin.ignore();
 
 }
-void Filter(char criteria[], char compare_option, char value[]) {
+
+void Filter(int option1_criteria, int compare_option, char value[]) {
 	char type[5];
 	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
 	std::fstream read;
@@ -271,13 +272,13 @@ void Filter(char criteria[], char compare_option, char value[]) {
 			read.getline(releasedate, 10, ';');
 		}
 		else {
-			read.getline(core, 10, ';');
-			read.getline(threads, 10, ';');
-			read.getline(socket, 10, ';');
+			read.getline(core, 10, ';'); 
+			read.getline(threads, 10, ';'); 
+			read.getline(socket, 10, ';'); 
 			read.getline(max_resolution, 15, ';');
 			read.getline(tech, 25, ';');
 			read.getline(weight, 10, ';');
-			read.getline(height, 10, ';');
+			read.getline(height, 10, ';'); 
 			read.getline(tdp, 10, ';');
 			read.getline(nm, 10, ';');
 			read.getline(memory, 10, ';');
@@ -285,205 +286,753 @@ void Filter(char criteria[], char compare_option, char value[]) {
 			read.getline(price, 10, ';');
 			read.getline(releasedate, 10, ';');
 		}
-		switch (compare_option) {
-		case '<': {
-			if (strcmp(criteria,value)<=0) {
-				std::fstream writef;
-				writef.open("filter.txt", std::fstream::app | std::fstream::out);
-				writef << type << ' ' << name << "; ";
-				if (type == "CPU") {
-					writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				else if (type == "GPU") {
-					writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				else {
-					writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				writef.close();
-			}
-			break;
-		}
-		case '>': {
-			if (strcmp(criteria, value) >= 0) {
-				std::fstream writef;
-				writef.open("filter.txt", std::fstream::app | std::fstream::out);
-				writef << type << ' ' << name << "; ";
-				if (type == "CPU") {
-					writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				else if (type == "GPU") {
-					writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				else {
-					writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				writef.close();
-			}
-			break;
-		}
-		case '=': {
-			if (strcmp(criteria, value) == 0) {
-				std::fstream writef;
-				writef.open("filter.txt", std::fstream::app | std::fstream::out);
-				writef << type << ' ' << name << "; ";
-				if (type == "CPU") {
-					writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				else if (type == "GPU") {
-					writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				else {
-					writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
-				}
-				writef.close();
-			}
-			break;
-		}
-		}
-	}
-	read.close();
-	ListProduct("filter.txt");
-}
-
-void MainFilter(void) {
-	char type[5];
-	char name[100], weight[10], height[10], tdp[10], freq[10], price[10], nm[10], memory[10], core[10], threads[10], releasedate[25], tech[25], socket[10], max_resolution[15];
-	std::fstream readf;
-	readf.open("products.txt", std::fstream::in);
-	while (readf >> type) {
-		readf.getline(name, 100, ';');
-		if (!strcmp(type, "CPU")) {
-			readf.getline(core, 10, ';');
-			readf.getline(threads, 10, ';');
-			readf.getline(socket, 10, ';');
-			readf.getline(weight, 10, ';');
-			readf.getline(height, 10, ';');
-			readf.getline(tdp, 10, ';');
-			readf.getline(nm, 10, ';');
-			readf.getline(memory, 10, ';');
-			readf.getline(freq, 10, ';');
-			readf.getline(price, 10, ';');
-			readf.getline(releasedate, 10, ';');
-		}
-		else if (!strcmp(type, "GPU")) {
-			readf.getline(max_resolution, 15, ';');
-			readf.getline(tech, 25, ';');
-			readf.getline(weight, 10, ';');
-			readf.getline(height, 10, ';');
-			readf.getline(tdp, 10, ';');
-			readf.getline(nm, 10, ';');
-			readf.getline(memory, 10, ';');
-			readf.getline(freq, 10, ';');
-			readf.getline(price, 10, ';');
-			readf.getline(releasedate, 10, ';');
-		}
-		else {
-			readf.getline(core, 10, ';');
-			readf.getline(threads, 10, ';');
-			readf.getline(socket, 10, ';');
-			readf.getline(max_resolution, 15, ';');
-			readf.getline(tech, 25, ';');
-			readf.getline(weight, 10, ';');
-			readf.getline(height, 10, ';');
-			readf.getline(tdp, 10, ';');
-			readf.getline(nm, 10, ';');
-			readf.getline(memory, 10, ';');
-			readf.getline(freq, 10, ';');
-			readf.getline(price, 10, ';');
-			readf.getline(releasedate, 10, ';');
-		}
-		int option1 = MeniuFilter1();
-		int option2 = MeniuFilter2();
-		char value[100];
-		select_option: 
-		std::cout << "Enter your value: ";
-		std::cin.getline(value, 100,'\n');
-		switch (option1)
-		{
+		switch (option1_criteria){
 		case 1: {
-			if (option2 == 1) Filter(type, '<', value);
-			else if (option2 == 2) Filter(type, '>', value);
-			else if (option2 == 3) Filter(type, '=', value);
+			if (compare_option == 1) {
+				if (strcmp(type, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(type, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(type, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 2: {
-			if (option2 == 1) Filter(name, '<', value);
-			else if(option2 ==2 ) Filter(name, '>', value);
-			else if (option2 == 3) Filter(name, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(name, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(name, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(type, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 3: {
-			if (option2 == 1) Filter(core, '<', value);
-			else if (option2 == 2) Filter(core, '>', value);
-			else if (option2 == 3) Filter(core, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(core, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(core, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(core, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 4: {
-			if (option2 == 1) Filter(threads, '<', value);
-			else if (option2 == 2) Filter(threads, '>', value);
-			else if (option2 == 3) Filter(threads, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(threads, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(threads, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(threads, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 5: {
-			if (option2 == 1) Filter(tech, '<', value);
-			else if (option2 == 2) Filter(tech, '>', value);
-			else if (option2 == 3) Filter(tech, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(tech, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(tech, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(tech, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 6: {
-			if (option2 == 1) Filter(weight, '<', value);
-			else if (option2 == 2) Filter(weight, '>', value);
-			else if (option2 == 3) Filter(weight, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(weight, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(weight, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(weight, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 7: {
-			if (option2 == 1) Filter(height, '<', value);
-			else if (option2 == 2) Filter(height, '>', value);
-			else if (option2 == 3) Filter(height, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(height, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(height, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(height, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 8: {
-			if (option2 == 1) Filter(tdp, '<', value);
-			else if (option2 == 2) Filter(tdp, '>', value);
-			else if (option2 == 3) Filter(tdp, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(tdp, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(tdp, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(tdp, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 9: {
-			if (option2 == 1) Filter(nm, '<', value);
-			else if (option2 == 2) Filter(nm, '>', value);
-			else if (option2 == 3) Filter(nm, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(nm, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(nm, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(nm, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 10: {
-			if (option2 == 1) Filter(memory, '<', value);
-			else if (option2 == 2) Filter(memory, '>', value);
-			else if (option2 == 3) Filter(memory, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(memory, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(memory, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(memory, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 11: {
-			if (option2 == 1) Filter(freq, '<', value);
-			else if (option2 == 2) Filter(freq, '>', value);
-			else if (option2 == 3) Filter(freq, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(freq, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(freq, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(freq, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 12: {
-			if (option2 == 1) Filter(price, '<', value);
-			else if (option2 == 2) Filter(price, '>', value);
-			else if (option2 == 3) Filter(price, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(price, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(price, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(price, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		case 13: {
-			if (option2 == 1) Filter(releasedate, '<', value);
-			else if (option2 == 2) Filter(releasedate, '>', value);
-			else if(option2 == 3) Filter(releasedate, '=', value); 
+			if (compare_option == 1) {
+				if (strcmp(releasedate, value) <= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 2) {
+				if (strcmp(releasedate, value) >= 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else if (compare_option == 3) {
+				if (strcmp(releasedate, value) == 0) {
+					std::fstream writef;
+					writef.open("filter.txt", std::fstream::app | std::fstream::out);
+					writef << type << ' ' << name << "; ";
+					if (type == "CPU") {
+						writef << core << "; " << threads << "; " << socket << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else if (type == "GPU") {
+						writef << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					else {
+						writef << core << "; " << threads << "; " << socket << "; " << max_resolution << "; " << tech << "; " << weight << "; " << height << "; " << tdp << "; " << nm << "; " << memory << "; " << freq << "; " << price << "; " << releasedate << "; \n";
+					}
+					writef.close();
+				}
+			}
+			else {
+				std::cerr << "No valid option"; exit(-2);
+			}
 			break;
 		}
 		default: {
 			std::cerr << "No valid option!!";
-			goto select_option;
+			exit(-3);
 		}
 		}
+	}
+	ListProduct("filter.txt");
 }
-}
-	
